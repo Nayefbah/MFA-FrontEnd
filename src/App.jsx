@@ -1,16 +1,52 @@
-// src/App.jsx
-
-import { useState } from 'react'
-import { Routes, Route } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
+import './App.css'
 import NavBar from './components/NavBar/NavBar'
+import Home from './pages/Home'
+import Signin from './pages/auth/Signin'
+import Signup from './pages/auth/Signup'
+import Dashboard from './pages/Dashboard'
+import { useEffect, useState } from 'react'
+import { getProfile } from './components/services/userService'
 
-const App = () => {
+function App() {
   const [user, setUser] = useState(null)
+  const getUserProfile = async () => {
+    try {
+      const data = await getProfile()
+      setUser(data)
+    } catch (error) {
+      setUser(null)
+      console.log(error)
+    }
+  }
+  const logOut = () => {
+    localStorage.removeItem('authToken')
+    setUser(null)
+  }
+
+  useEffect(() => {
+    getUserProfile()
+  }, [])
 
   return (
     <>
-      <NavBar user={user} />
-      <h1>Hello world!</h1>
+      <header>
+        <NavBar logOut={logOut} user={user} />
+      </header>
+      <main>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/dashboard" element={<Dashboard user={user} />} />
+          <Route
+            path="/auth/signup"
+            element={<Signup getUserProfile={getUserProfile} />}
+          />
+          <Route
+            path="/auth/signin"
+            element={<Signin getUserProfile={getUserProfile} />}
+          />
+        </Routes>
+      </main>
     </>
   )
 }
