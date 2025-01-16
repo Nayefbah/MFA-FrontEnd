@@ -6,9 +6,10 @@ const initialFormData = {
   username: '',
   password: ''
 }
+
 const Signin = ({ getUserProfile }) => {
   const [message, setMessage] = useState('')
-  const [formData, setFormData] = useState(initialFormData)
+  const [formData, setFormData] = useState({ username: '', password: '' })
   const navigate = useNavigate()
 
   const handleChange = (e) => {
@@ -20,26 +21,34 @@ const Signin = ({ getUserProfile }) => {
     try {
       await signIn(formData)
       await getUserProfile()
-      setFormData(initialFormData)
       navigate('/dashboard')
     } catch (error) {
-      setMessage(error.response?.data?.error)
+      if (error.response?.status === 401) {
+        navigate('/auth/signin')
+      } else {
+        setMessage(
+          error.response?.data?.error || 'An unexpected error occurred.'
+        )
+      }
     }
+  }
+
+  const isFormInvalid = () => {
+    return !(formData.username && formData.password)
   }
 
   return (
     <main>
       <h1>Log In</h1>
-      <p style={{ color: 'red' }}>{message}</p>
-      <form autoComplete="off" onSubmit={handleSubmit}>
+      {message && <p style={{ color: 'red' }}>{message}</p>}
+      <form onSubmit={handleSubmit}>
         <div>
-          <label htmlFor="email">Username:</label>
+          <label htmlFor="username">Username:</label>
           <input
             type="text"
-            autoComplete="off"
             id="username"
-            value={formData.username}
             name="username"
+            value={formData.username}
             onChange={handleChange}
           />
         </div>
@@ -47,19 +56,16 @@ const Signin = ({ getUserProfile }) => {
           <label htmlFor="password">Password:</label>
           <input
             type="password"
-            autoComplete="off"
             id="password"
-            value={formData.password}
             name="password"
+            value={formData.password}
             onChange={handleChange}
           />
         </div>
-        <section>
-          <button>Log In</button>
-          <Link to="/">
-            <button>Cancel</button>
-          </Link>
-        </section>
+        <button disabled={isFormInvalid()}>Log In</button>
+        <Link to="/" className="button-link">
+          Cancel
+        </Link>
       </form>
     </main>
   )

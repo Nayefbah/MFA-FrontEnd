@@ -1,51 +1,74 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { signUp } from '../../services/authService'
+import { signUp } from '../../components/services/authService'
 
 const initialFormData = {
   username: '',
+  email: '',
   password: '',
-  passwordConf: '',
-  phoneNumber: ''
+  passwordConf: ''
 }
+
 const Signup = ({ getUserProfile }) => {
   const [message, setMessage] = useState('')
   const [formData, setFormData] = useState(initialFormData)
+  const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
+  const validateForm = () => {
+    if (!formData.username) return 'Username is required.'
+    if (!/\S+@\S+\.\S+/.test(formData.email)) return 'Invalid email format.'
+    if (formData.password.length < 6)
+      return 'Password must be at least 6 characters.'
+    if (formData.password !== formData.passwordConf)
+      return 'Passwords do not match.'
+    return ''
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
+
+    const validationError = validateForm()
+    if (validationError) {
+      setMessage(validationError)
+      return
+    }
+
+    setIsLoading(true)
     try {
       await signUp(formData)
       await getUserProfile()
       setFormData(initialFormData)
       navigate('/dashboard')
     } catch (error) {
-      setMessage(error.response?.data?.error)
+      setMessage(
+        error.response?.data?.error || 'An error occurred. Please try again.'
+      )
       console.log(error)
+    } finally {
+      setIsLoading(false)
     }
   }
 
   const isFormInvalid = () => {
     return !(
       formData.username &&
+      formData.email &&
       formData.password &&
-      formData.password === formData.passwordConf &&
-      formData.phoneNumber
+      formData.password === formData.passwordConf
     )
   }
 
   return (
     <main>
       <h1>Create an Account</h1>
-      {error && <p className="error-message">{error}</p>}
+      {message && <p className="error-message">{message}</p>}
       <form onSubmit={handleSubmit}>
         <div>
-          <label htmlFor="username">Username</label>
           <input
             type="text"
             id="username"
@@ -56,7 +79,6 @@ const Signup = ({ getUserProfile }) => {
           />
         </div>
         <div>
-          <label htmlFor="email">Email</label>
           <input
             type="email"
             id="email"
@@ -67,7 +89,6 @@ const Signup = ({ getUserProfile }) => {
           />
         </div>
         <div>
-          <label htmlFor="password">Password</label>
           <input
             type="password"
             id="password"
@@ -78,7 +99,6 @@ const Signup = ({ getUserProfile }) => {
           />
         </div>
         <div>
-          <label htmlFor="confirm">Confirm Password</label>
           <input
             type="password"
             id="confirm"
@@ -89,7 +109,9 @@ const Signup = ({ getUserProfile }) => {
           />
         </div>
         <section>
-          <button disabled={isFormInvalid()}>Sign Up</button>
+          <button disabled={isFormInvalid() || isLoading}>
+            {isLoading ? 'Submitting...' : 'Sign Up'}
+          </button>
           <Link to="/" className="button-link">
             Cancel
           </Link>

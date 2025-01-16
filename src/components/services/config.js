@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const client = axios.create({
-  baseURL: import.meta.env.VITE_BACK_END_URL
+  baseURL: import.meta.env.REACT_Back_End_URL || 'http://localhost:3000'
 })
 
 client.interceptors.request.use((config) => {
@@ -11,6 +11,7 @@ client.interceptors.request.use((config) => {
   }
   return config
 })
+
 client.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -21,4 +22,5 @@ client.interceptors.response.use(
     return Promise.reject(error)
   }
 )
+
 export default client

@@ -10,9 +10,7 @@ const Dashboard = ({ user }) => {
         This is the dashboard page where you, and only you, can see a dashboard
         of all of your things.
       </p>
-      <a href={`tel:+${user?.phoneNumber}`}>
-        My phone number {user?.phoneNumber}
-      </a>
+      <a href={`email:+${user?.email}`}>My email {user?.email}</a>
     </>
   )
 }
