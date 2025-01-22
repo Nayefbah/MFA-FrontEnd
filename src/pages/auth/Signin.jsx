@@ -21,10 +21,10 @@ const Signin = ({ getUserProfile }) => {
     try {
       await signIn(formData)
       await getUserProfile()
-      navigate('/dashboard')
+      navigate('/')
     } catch (error) {
       if (error.response?.status === 401) {
-        navigate('/auth/signin')
+        setMessage('Invalid username or password.')
       } else {
         setMessage(
           error.response?.data?.error || 'An unexpected error occurred.'

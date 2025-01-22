@@ -1,36 +1,51 @@
 import { Link } from 'react-router-dom'
+import './NavBar.css'
 
 const NavBar = ({ logOut, user }) => {
   return (
-    <nav>
-      <ul>
+    <nav className="navbar">
+      <ul className="navbar-list">
         <li>
           <Link to="/">Home</Link>
         </li>
-        <li>
-          <Link to="/dashboard">Dashboard</Link>
-        </li>
-
         {user ? (
           <>
             <li>
-              <Link to="/" onClick={logOut}>
+              <Link to="/dashboard">My Items</Link>
+            </li>
+            <li>
+              <Link to="/new-item">New Item</Link>
+            </li>
+            <li>
+              <Link to="/profile">Profile</Link>
+            </li>
+            <li>
+              <Link to="/" onClick={logOut} className="logout-link">
                 Log out
               </Link>
             </li>
-            <p>Welcome, {user.username}</p>
           </>
         ) : (
           <>
             <li>
-              <Link to="/auth/signin">Signin</Link>
+              <Link to="/auth/signin">Sign In</Link>
             </li>
             <li>
-              <Link to="/auth/signup">Signup</Link>
+              <Link to="/auth/signup">Sign Up</Link>
             </li>
           </>
         )}
       </ul>
+      {user && (
+        <div className="user-info">
+          {user.avatar ? (
+            <img src={user.avatar} alt="User Avatar" className="user-avatar" />
+          ) : (
+            <span className="avatar-placeholder">👤</span>
+          )}
+          <p className="welcome-message">Welcome, {user.username}</p>
+        </div>
+      )}
     </nav>
   )
 }

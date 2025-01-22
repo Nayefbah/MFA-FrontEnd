@@ -1,0 +1,99 @@
+.navbar {
+  background-color: #f4f4f4;
+  padding: 10px 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+.navbar-list {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  flex-grow: 1;
+}
+
+.navbar-list li {
+  margin-right: 20px;
+}
+
+.navbar-list li:last-child {
+  margin-right: 0;
+}
+
+.navbar-list a,
+.navbar-list button {
+  text-decoration: none;
+  color: #333;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 5px 10px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.navbar-list a:hover,
+.navbar-list button:hover {
+  color: #fff;
+  background-color: #007bff;
+  text-decoration: none;
+}
+
+.logout-link {
+  color: #ff4d4d;
+}
+
+.logout-link:hover {
+  background-color: #d93636;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-left: auto;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ddd;
+}
+
+.avatar-placeholder {
+  font-size: 24px;
+  color: #666;
+}
+
+.welcome-message {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  margin: 0;
+}
+
+.profile-button {
+  margin-left: 10px;
+  padding: 5px 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.profile-button a {
+  text-decoration: none;
+  color: white;
+}
+
+.profile-button:hover {
+  background-color: #0056b3;
+}
